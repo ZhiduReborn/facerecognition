@@ -2,6 +2,7 @@ import React from 'react';
 import Clarifai from 'clarifai';
 import {Component} from 'react';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
+import ImageToBase64 from 'image-to-base64';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Logo from './components/Logo/Logo';
 import Navigation from './components/Navigation/Navigation';
@@ -53,6 +54,7 @@ class App extends Component {
       boxes: [],
       route: 'signin',
       isSignedIn: false,
+      base64: '',
     }
   }
 
@@ -74,8 +76,29 @@ class App extends Component {
     const faces = data.outputs[0].data.regions;
     var boxes = faces.map(this.calculateFaceLocation)
 
-    
     this.setState({ boxes: boxes });
+  }
+
+  onFileUpload = (event) => {
+    let reader = new FileReader();
+    let file = event.target.files[0];
+
+    reader.onloadend = () => {
+      this.setState({
+        imageUrl : reader.result
+      });
+      ImageToBase64(reader.result)
+        .then(
+          (response)=>{
+            app.models
+              .predict(Clarifai.FACE_DETECT_MODEL, {base64 : response})
+              .then( res => this.displayFaceBox(res) )
+              .catch( err => console.log(err) );
+          }
+        )
+        .catch( err => console.log(err));
+    }
+    reader.readAsDataURL(file);
   }
 
   onInputChange = (event) => {
@@ -83,11 +106,13 @@ class App extends Component {
   }
 
   onButtonSubmit = () => {
-    this.setState( { imageUrl: this.state.input });
-    app.models
-      .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
-      .then( response => this.displayFaceBox(response) )
-      .catch( err => console.log(err) );
+    if (this.state.input !== '') {
+      this.setState( { imageUrl: this.state.input });
+      app.models
+        .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
+        .then( response => this.displayFaceBox(response) )
+        .catch( err => console.log(err) );
+    }
   }
 
   onRouteChange = (route) => {
@@ -111,6 +136,7 @@ class App extends Component {
                 <Logo />
                 <Rank />
                 <ImageLinkForm 
+                  onFileUpload={this.onFileUpload}
                   onInputChange={this.onInputChange} 
                   onButtonSubmit={this.onButtonSubmit}
                 />

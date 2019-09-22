@@ -6,3 +6,7 @@
     #8a3;
     background-size: 20px 20px;
 }
+
+input[type="file"] {
+    display: none;
+}
