@@ -18,7 +18,19 @@ class Signin extends React.Component {
     }
 
     onSubmitSignIn = () => {
-        console.log(this.state);
+        fetch('http://localhost:3000/signin', {
+            method: 'post',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+                email: this.state.signInEmail,
+                password: this.state.signInPassword
+            })
+        }).then(response => response.json())
+        .then(data => {
+            if (data === 'success'){
+                this.props.onRouteChange('home');
+            }
+        });
     }
 
     render() {
@@ -30,15 +42,19 @@ class Signin extends React.Component {
                             <legend className='f1 fw6 ph0 mh0'>Sign In</legend>
                             <div className='mt3'>
                                 <label className='db fw6 lh-copy f6'>Email</label>
-                                <input className='pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100' type='email' name='email-address' id='email' />
+                                <input className='pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100' 
+                                    type='email' name='email-address' id='email'
+                                    onChange={this.onEmailChange} />
                             </div>
                             <div className='mv3'>
                                 <label className='db fw6 lh-copy f6'>Password</label>
-                                <input className='b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100' type='password' name='password' id='password'/>
+                                <input className='b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100' 
+                                    type='password' name='password' id='password'
+                                    onChange={this.onPasswordChange} />
                             </div>
                         </fieldset>
                         <div>
-                            <p className='b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib' type='submit' value='sign in' onClick={() => this.props.onRouteChange('home')}>Sign In</p>
+                            <p className='b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib' type='submit' value='sign in' onClick={this.onSubmitSignIn}>Sign In</p>
                         </div>
                         <div className='lh-copy mt3'>
                             <p href='#0' className='f6 link dim black db pointer' onClick={ () => this.props.onRouteChange('register')}>Register</p>
