@@ -56,7 +56,6 @@ class App extends Component {
       isSignedIn: false,
       base64: '',
       user: {
-        email: '',
         id:'',
         name: '',
         email: '',
@@ -68,7 +67,6 @@ class App extends Component {
 
   loadUser = (data) => {
     this.setState({user: {
-      email: data.email,
       id: data.id,
       name: data.name,
       email: data.email,
