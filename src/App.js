@@ -55,13 +55,26 @@ class App extends Component {
       route: 'signin',
       isSignedIn: false,
       base64: '',
+      user: {
+        email: '',
+        id:'',
+        name: '',
+        email: '',
+        entries: 0,
+        joined: ''
+      }
     }
   }
 
-  componentDidMount() {
-    fetch('http://localhost:3000')
-    .then(response => response.json())
-    .then(console.log)
+  loadUser = (data) => {
+    this.setState({user: {
+      email: data.email,
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      entries: 0,
+      joined: data.joined
+    }});
   }
 
   calculateFaceLocation = (face) => {
@@ -151,7 +164,7 @@ class App extends Component {
               :
               (
                 this.state.route === 'register' ?
-                  <Register onRouteChange={this.onRouteChange} /> :
+                  <Register onRouteChange={this.onRouteChange} loadUser={this.loadUser} /> :
                   <Signin onRouteChange={this.onRouteChange} />
               )
           } 
