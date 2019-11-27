@@ -13,7 +13,7 @@ const ImageLinkForm = ( { onInputChange, onFileUpload, onButtonSubmit } ) => {
                     <button className='w-20 f4 link ph3 pv2 dib white bg-light-purple' onClick={onButtonSubmit}> Detect </button>
                     <h2 className='white w-10'>OR</h2>
                     <label className='w-20 f4 link ph3 pv2 dib white bg-light-purple pointer button shadow'>
-                        <input type='file' accept='image/*' single='true' onChange={onFileUpload} />
+                        <input id='image-file' type='file' accept='image/*' single='true' onChange={onFileUpload} />
                         <p>Upload</p>
                     </label>
 

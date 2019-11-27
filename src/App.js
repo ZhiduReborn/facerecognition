@@ -104,17 +104,22 @@ class App extends Component {
       this.setState({
         imageUrl : reader.result
       });
+      
       ImageToBase64(reader.result)
-        .then(
-          (response)=>{
-            app.models
-              .predict(Clarifai.FACE_DETECT_MODEL, {base64 : response})
-              .then( res => this.imageHelper(res) )
-              .catch( err => console.log(err) );
-          }
-        )
-        .catch( err => console.log(err));
+      .then((response)=>{
+        fetch('http://localhost:3000/imageupload', {
+            method: 'post', 
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+              photo: response
+            })
+          })
+          .then( res => res.json())
+          .then( res => this.imageHelper(res) )
+          .catch( err => console.log(err) );
+      }).catch( err => console.log(err));
     }
+
     reader.readAsDataURL(file);
   }
 
@@ -132,8 +137,9 @@ class App extends Component {
     }
   }
 
-  imageHelper = (response) => {
-    if (response){
+  imageHelper = (cres) => {
+    if (cres){
+      //update server
       fetch('http://localhost:3000/image', {
         method: 'put',
         headers: {'Content-Type':'application/json'},
@@ -144,7 +150,9 @@ class App extends Component {
         .then(count => {
           this.setState(Object.assign(this.state.user, {entries: count}))
         })
-      this.displayFaceBox(response);
+
+      //display box
+      this.displayFaceBox(cres);
     }
   }
 
