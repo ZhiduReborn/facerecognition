@@ -102,7 +102,7 @@ class App extends Component {
       
       ImageToBase64(reader.result)
       .then((response)=>{
-        fetch('http://localhost:3000/imageupload', {
+        fetch('https://evening-forest-26315.herokuapp.com/imageupload', {
             method: 'post', 
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({
@@ -125,7 +125,7 @@ class App extends Component {
   onButtonSubmit = () => {
     if (this.state.input !== '') {
       this.setState( { imageUrl: this.state.input });
-      fetch('http://localhost:3000/imageurl', {
+      fetch('https://evening-forest-26315.herokuapp.com/imageurl', {
             method: 'post', 
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({
@@ -141,7 +141,7 @@ class App extends Component {
   imageHelper = (cres) => {
     if (cres){
       //update server
-      fetch('http://localhost:3000/image', {
+      fetch('https://evening-forest-26315.herokuapp.com/image', {
         method: 'put',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({
